@@ -9,12 +9,11 @@ const server = new Server();
 server.app.use(bodyParser.urlencoded({extended:true}));
 server.app.use(bodyParser.json());
 //cors
-
 server.app.use(cors({origin:true, credentials:true}));
-
 //configurando las rutas
 server.app.use('/',router);
 //iniciando el servidor
 server.start(()=>{
 	console.log(`Servidor corriendo en el puerto ${server.port}`);
 });
+

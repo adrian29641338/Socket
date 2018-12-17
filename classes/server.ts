@@ -1,19 +1,46 @@
 //importando libreria express
 import express from 'express';
 import { SERVER_PORT } from '../globals/environment';
+import http from 'http';
+import socketIO from 'socket.io';
+
 //creando a variable del servidor express
 export default class Server{
 
 	public app:express.Application;
 	public port:Number;
+	private httpServer:http.Server;
+	public io:socketIO.Server;
 
 	//constructor del Server
 	constructor(){
 		this.app = express();
 		this.port = SERVER_PORT;
+		//configurando el nuevo servidor web a través de http
+		this.httpServer = new http.Server(this.app);
+		this.io = socketIO(this.httpServer);
+		this.escucharSockets();
+
+	}
+	//función para escuchar las conexiones
+	public escucharSockets(){
+		console.log("Listo para recibir conexiones o sockets o clientes");
+		//el servidor escuchaa el evento connect y recibe al cliente conectado
+		this.io.on('connect',cliente=>{				//desde esta linea 27 esta escuchando hasta la linea 29
+			console.log("Nuevo cliente conectado");
+			//el cliente que se ha conectado previamente, escucha su desconexion
+			cliente.on('disconnect',()=>{
+				console.log("el cliente se ha desconectado");
+			});
+			//el cliente que se ha conectado previamente, escucha un vento de nombre: 'mensaje'
+			cliente.on('mensaje',(contenido)=>{
+				console.log("entrada", contenido);
+				this.io.emit('mensaje-nuevo', contenido);
+			})
+		});
 	}
 	//funcion para iniciar el servidor
 	public start(callback:Function){
-		this.app.listen(this.port,callback);
+		this.httpServer.listen(this.port,callback);
 	}
 }
