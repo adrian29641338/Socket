@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import {router} from './routes/router';
 //instanciando al servidor
-const server = new Server();
+const server = Server.instance;
 //configurando bodyparser para que los argumentos que lleguen por urlencoded
 //lleguen en el arreglo 'body' del re
 server.app.use(bodyParser.urlencoded({extended:true}));

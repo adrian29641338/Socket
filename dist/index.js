@@ -8,7 +8,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const router_1 = require("./routes/router");
 //instanciando al servidor
-const server = new server_1.default();
+const server = server_1.default.instance;
 //configurando bodyparser para que los argumentos que lleguen por urlencoded
 //lleguen en el arreglo 'body' del re
 server.app.use(body_parser_1.default.urlencoded({ extended: true }));
