@@ -15,7 +15,6 @@ exports.router.get('/mensajes', (req, res) => {
 exports.router.post('/mensajes', (req, res) => {
     var entrada = req.body.entrada;
     var de = req.body.de;
-    var id = req.params.id;
     const payload = {
         de: de,
         entrada: entrada
@@ -33,15 +32,28 @@ exports.router.post('/mensajes/:id', (req, res) => {
     var de = req.body.de;
     var id = req.params.id;
     const payload = {
-        de: de,
-        entrada: entrada
+        de,
+        cuerpo: entrada
     };
     const server = server_1.default.instance;
     server.io.in(id).emit('mensaje-privado', payload);
-    res.status(200).send({
-        ok: true,
-        mensaje: "Mensaje correcto",
-        entrada: entrada,
-        id: id,
+});
+exports.router.get('/usuarios', (req, res) => {
+    const server = server_1.default.instance;
+    //clients => retorna el arreglo de sockets conectados
+    //[] string
+    server.io.clients((err, clientes) => {
+        if (err) {
+            return res.status(505).send({
+                ok: false,
+                err
+            });
+        }
+        else {
+            return res.status(200).send({
+                ok: true,
+                clientes
+            });
+        }
     });
 });

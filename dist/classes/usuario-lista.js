@@ -10,7 +10,12 @@ class UsuariosLista {
         console.log("[UsuarioLista|agregar] Nueva Lista de Usuarios=>", this.lista);
     }
     getLista() {
-        return this.lista;
+        let listaTemporal = this.lista.filter((usuario) => {
+            if (usuario.nombre !== 'sin-nombre') {
+                return usuario;
+            }
+        });
+        return listaTemporal;
     }
     actualizarNombre(id, nombre) {
         for (let usuario of this.lista) {

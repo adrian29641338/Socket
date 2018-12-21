@@ -43,6 +43,7 @@ class Server {
             cliente.on('disconnect', () => {
                 console.log("el cliente se ha desconectado");
                 this.usuariosConectados.borrarUsuario(cliente.id);
+                this.io.emit('usuarios-activos', this.usuariosConectados.getLista());
             });
             //el cliente que se ha conectado previamente, escucha un vento de nombre: 'mensaje'
             cliente.on('mensaje', (contenido) => {
@@ -51,10 +52,14 @@ class Server {
             });
             cliente.on('configurar-usuario', (payload, callback) => {
                 this.usuariosConectados.actualizarNombre(cliente.id, payload.nombre);
+                this.io.emit('usuarios-activos', this.usuariosConectados.getLista());
                 callback({
                     ok: true,
                     mensaje: `Usuario ${payload.nombre} configurado`
                 });
+            });
+            cliente.on('obtener-usuarios', () => {
+                this.io.in(cliente.id).emit('usuarios-activos', this.usuariosConectados.getLista());
             });
         });
     }
